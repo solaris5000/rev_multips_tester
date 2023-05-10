@@ -4,10 +4,12 @@ fn main() {
     let mut base: u128 = 0;
     let mut buffer: u128;
     let mut adder: u128;
+    let mut rev_adder: u128;
     let mut resulter: u128;
+    let mut temp: u128;
 
     while base < MAX {
-        if base % 1000000 == 0 {
+        if base % 1_000_000_000 == 0 {
             println!("Testing {}+", base);
         }
 
@@ -20,17 +22,23 @@ fn main() {
         }
 
         resulter = adder;
+        temp = adder;
+        rev_adder = 0;
 
-        let my_str: String = format!("{:?}", adder);
-        let reversed = my_str.chars().rev().collect::<String>();
-        adder = reversed.parse().unwrap();
+        while temp > 0 {
+            if temp != adder {
+                rev_adder *= 10;
+            }
+            rev_adder += temp % 10;
+            temp /= 10;
+        }
 
-        resulter = resulter.overflowing_mul(adder).0;
+        resulter = resulter.overflowing_mul(rev_adder).0;
 
         if base == resulter {
             println!(
                 "===================== > Found {} = {} * {}",
-                base, my_str, reversed
+                base, adder, rev_adder
             );
         }
 
